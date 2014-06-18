@@ -101,3 +101,15 @@ This plugin also allows you the option to listen for ad events. The following ev
  
  See the working example code in [demo under test folder](test/index.html)
  
+ Screenshots, Banner and Interstitial Ads
+ ---------------------------------------------------
+ iPhone
+ 
+ ![Screenshot](flurry-iphone.jpg)
+ 
+ iPad, Landscape
+ 
+ ![Screenshot](flurry-ipad.jpg)
+ 
+ 
+ 
