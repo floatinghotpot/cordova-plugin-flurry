@@ -3,5 +3,101 @@ cordova-plugin-flurry
 
 Cordova plugin to support Flurry (analytics and advertisement)
 
-Under development, not working yet.
+It's targeted to build with cordova 3.5.
 
+Currently, it works on:
+* iOS, tested.
+* Android, build pass, but not working yet.
+
+How to use?
+---------------------------
+To install this plugin, follow the [Command-line Interface Guide](http://cordova.apache.org/docs/en/edge/guide_cli_index.md.html#The%20Command-line%20Interface).
+
+    cordova plugin add https://github.com/MobileChromeApps/google-play-services.git
+    cordova plugin add https://github.com/floatinghotpot/cordova-plugin-flurry.git
+
+Note: ensure you have a proper Flurry account and create an Id for your app.
+    
+Quick example with cordova command line tool
+------------------------------------------------
+    cordova create testflurry com.rjfun.testflurry TestFlurry
+    cd testflurry
+    cordova platform add android
+    cordova platform add ios
+    cordova plugin add https://github.com/MobileChromeApps/google-play-services.git
+    cordova plugin add https://github.com/floatinghotpot/cordova-plugin-flurry.git
+    mv www www.default
+    mkdir www
+    cp plugins/com.rjfun.cordova.plugin.flurry/test/index.html www/
+    cordova build
+    ... cordova emulate android/ios, or import the android project into eclipse or ios project into xcode
+
+Or, just clone the testflurry project from github:
+
+    git clone git@github.com:floatinghotpot/testflurry.git
+    
+Example javascript 
+-------------------------------------------------
+Call the following code inside onDeviceReady(), because only after device ready you will have the plugin working.
+(almost same as cordova-plugin-admob, just plugin name and app key from Ad vendor different)   
+ 
+    var flurry_ios_key = '2DYY249X5G798HMF3MTH';
+    var flurry_android_key = 'G56KN4J49YT66CFRD5K6';
+    var adId = (navigator.userAgent.indexOf('Android') >=0) ? flurry_android_key : flurry_ios_key;
+ 
+    if( window.plugins && window.plugins.Flurry ) {
+        var am = window.plugins.Flurry;
+    
+        am.createBannerView( 
+            {
+            'publisherId': adId,
+            'adSize': am.AD_SIZE.BANNER,
+            'bannerAtTop': false
+            }, 
+            function() {
+        	    am.requestAd(
+        		    { 'isTesting':true }, 
+            		function(){
+            			am.showAd( true );
+            		}, 
+            		function(){ alert('failed to request ad'); }
+            	);
+            }, 
+            function(){ alert('failed to create banner view'); }
+        );
+        
+        am.createInterstitialView(
+              {
+                  'publisherId': adId,
+              },
+              function() {
+                  am.requestInterstitialAd( { 'isTesting':true }, function() {}, function() { alert('failed to request ad'); });
+              },
+              function() {
+                  alert("Interstitial failed");
+              }
+          );
+        
+    } else {
+      alert('Flurry plugin not available/ready.');
+    }
+ 
+ More ...
+ --------------------------------------------------
+This plugin also allows you the option to listen for ad events. The following events are supported:
+
+    	// more callback to handle Ad events
+    	document.addEventListener('onReceiveAd', function(){
+    	});
+    	document.addEventListener('onFailedToReceiveAd', function(data){
+    		// alert( data.error );
+    	});
+    	document.addEventListener('onPresentAd', function(){
+    	});
+    	document.addEventListener('onDismissAd', function(){
+    	});
+    	document.addEventListener('onLeaveToAd', function(){
+    	});   
+ 
+ See the working example code in [demo under test folder](test/index.html)
+ 
