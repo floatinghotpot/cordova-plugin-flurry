@@ -31,9 +31,6 @@ var flurryExport = {};
  */
 flurryExport.AD_SIZE = {
   BANNER: 'BANNER',
-  IAB_MRECT: 'IAB_MRECT',
-  IAB_BANNER: 'IAB_BANNER',
-  IAB_LEADERBOARD: 'IAB_LEADERBOARD',
   SMART_BANNER: 'SMART_BANNER'
 };
 

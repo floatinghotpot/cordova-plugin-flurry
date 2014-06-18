@@ -20,15 +20,14 @@
 @class GADBannerView;
 @class GADInterstitial;
 
-#pragma mark AdMob Plugin
+#pragma mark Flurry Plugin
 
-// This version of the AdMob plugin has been tested with Cordova version 2.5.0.
-@interface CDVAdMob : CDVPlugin <GADBannerViewDelegate, GADInterstitialDelegate> {
+@interface CDVFlurry : CDVPlugin <FlurryAdDelegate> {
 }
 
-@property(nonatomic, retain) GADBannerView *bannerView;
-@property(nonatomic, retain) GADInterstitial *interstitialView;
 @property (assign) BOOL bannerAtTop;
+@property (assign) int adSize;
+@property (assign) BOOL adShow;
 
 - (void)createBannerView:(CDVInvokedUrlCommand *)command;
 - (void)destroyBannerView:(CDVInvokedUrlCommand *)command;

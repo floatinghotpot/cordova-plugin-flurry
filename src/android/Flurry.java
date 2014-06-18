@@ -5,7 +5,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.mediation.admob.AdMobExtras;
+import com.google.android.gms.ads.mediation.admob.FlurryExtras;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.LinearLayoutSoftKeyboardDetect;
@@ -24,11 +24,11 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * This class represents the native implementation for the AdMob Cordova plugin.
- * This plugin can be used to request AdMob ads natively via the Google AdMob SDK.
- * The Google AdMob SDK is a dependency for this plugin.
+ * This class represents the native implementation for the Flurry Cordova plugin.
+ * This plugin can be used to request Flurry ads natively via the Google Flurry SDK.
+ * The Google Flurry SDK is a dependency for this plugin.
  */
-public class AdMob extends CordovaPlugin {
+public class Flurry extends CordovaPlugin {
   /** The adView to display to the user. */
   private AdView adView;
 
@@ -39,7 +39,7 @@ public class AdMob extends CordovaPlugin {
   private boolean bannerAtTop;
 
   /** Common tag used for logging statements. */
-  private static final String LOGTAG = "AdMob";
+  private static final String LOGTAG = "Flurry";
 
   /** Cordova Actions. */
   private static final String ACTION_CREATE_BANNER_VIEW = "createBannerView";
@@ -59,7 +59,7 @@ public class AdMob extends CordovaPlugin {
   private static final int	SHOW_AD_ARG_INDEX = 0;
 
   /**
-   * This is the main method for the AdMob plugin.  All API calls go through here.
+   * This is the main method for the Flurry plugin.  All API calls go through here.
    * This method determines the action, and executes the appropriate call.
    *
    * @param action The action that the plugin should execute.
@@ -250,10 +250,10 @@ public class AdMob extends CordovaPlugin {
    * is a blocking call that waits for a notification from the runnable
    * before it continues.
    *
-   * @param runnable The AdMobRunnable representing the command to run.
+   * @param runnable The FlurryRunnable representing the command to run.
    * @return A PluginResult representing the result of the command.
    */
-  private PluginResult executeRunnable(AdMobRunnable runnable) {
+  private PluginResult executeRunnable(FlurryRunnable runnable) {
     synchronized (runnable) {
       cordova.getActivity().runOnUiThread(runnable);
       try {
@@ -269,9 +269,9 @@ public class AdMob extends CordovaPlugin {
   }
 
   /**
-   * Represents a runnable for the AdMob plugin that will run on the UI thread.
+   * Represents a runnable for the Flurry plugin that will run on the UI thread.
    */
-  private abstract class AdMobRunnable implements Runnable {
+  private abstract class FlurryRunnable implements Runnable {
     protected PluginResult result = null;
 
     public PluginResult getPluginResult() {
@@ -280,7 +280,7 @@ public class AdMob extends CordovaPlugin {
   }
 
   /** Runnable for the createBannerView action. */
-  private class CreateBannerViewRunnable extends AdMobRunnable {
+  private class CreateBannerViewRunnable extends FlurryRunnable {
     private String publisherId;
     private AdSize adSize;
 
@@ -315,7 +315,7 @@ public class AdMob extends CordovaPlugin {
   }
 
   /** Runnable for the createInterstitialView action. */
-  private class CreateInterstitialViewRunnable extends AdMobRunnable {
+  private class CreateInterstitialViewRunnable extends FlurryRunnable {
     private String publisherId;
 
     public CreateInterstitialViewRunnable(String publisherId) {
@@ -337,7 +337,7 @@ public class AdMob extends CordovaPlugin {
     }
   }
 
-  private class DestroyBannerViewRunnable extends AdMobRunnable {
+  private class DestroyBannerViewRunnable extends FlurryRunnable {
     public DestroyBannerViewRunnable() {
       result = new PluginResult(Status.NO_RESULT);
     }
@@ -358,7 +358,7 @@ public class AdMob extends CordovaPlugin {
   }
 
   /** Runnable for the basic requestAd action. */
-  private class RequestAdBasicRunnable extends AdMobRunnable {
+  private class RequestAdBasicRunnable extends FlurryRunnable {
     private boolean isTesting;
     private JSONObject inputExtras;
     private String adType;
@@ -392,7 +392,7 @@ public class AdMob extends CordovaPlugin {
         }
         if (inputValid) {
           bundle.putInt("cordova", 1);
-          AdMobExtras extras = new AdMobExtras(bundle);
+          FlurryExtras extras = new FlurryExtras(bundle);
           request_builder = request_builder.addNetworkExtras(extras);
           AdRequest request = request_builder.build();
           if (adView != null && adType.equals("banner"))
@@ -428,7 +428,7 @@ public class AdMob extends CordovaPlugin {
   }
 
   /** Runnable for the showAd action. This is only available for Banner View. */
-  private class ShowAdRunnable extends AdMobRunnable {
+  private class ShowAdRunnable extends FlurryRunnable {
     private boolean show;
 
     public ShowAdRunnable(boolean show) {
@@ -455,7 +455,7 @@ public class AdMob extends CordovaPlugin {
   }
 
   /**
-   * This class implements the AdMob ad listener events.  It forwards the events
+   * This class implements the Flurry ad listener events.  It forwards the events
    * to the JavaScript layer.  To listen for these events, use:
    *
    * document.addEventListener('onReceiveAd', function());
@@ -491,7 +491,7 @@ public class AdMob extends CordovaPlugin {
   private class BannerListener extends BasicListener {
     @Override
     public void onAdLoaded() {
-      Log.w("AdMob", "BannerAdLoaded");
+      Log.w("Flurry", "BannerAdLoaded");
       webView.loadUrl("javascript:cordova.fireDocumentEvent('onReceiveAd');");
     }
   }
@@ -501,7 +501,7 @@ public class AdMob extends CordovaPlugin {
     public void onAdLoaded() {
       if (interstitialAd != null) {
         interstitialAd.show();
-        Log.w("AdMob", "InterstitialAdLoaded");
+        Log.w("Flurry", "InterstitialAdLoaded");
       }
       webView.loadUrl("javascript:cordova.fireDocumentEvent('onReceiveAd');");
     }

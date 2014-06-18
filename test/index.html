@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=device-dpi" />
+        <title>Hello World</title>
+        <script type="text/javascript" src="cordova.js"></script>
+        <style type="text/css">
+            html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background-color:white; }
+            div#fullpage { width:100%; height:100%; margin:0; padding:0; border:0px solid red; text-align:center; vertical-align:middle; }
+            button { font-size: 22px; }
+        </style>
+    </head>
+    <body onload="onLoad()" onresize="onResize()">
+    <script>
+    var flurry_ios_key = '2DYY249X5G798HMF3MTH';
+    var flurry_android_key = 'G56KN4J49YT66CFRD5K6';
+    var adId = (navigator.userAgent.indexOf('Android') >=0) ? flurry_android_key : flurry_ios_key;
+    
+    function onLoad() {
+    	document.addEventListener("deviceready", onDeviceReady, false);
+    	
+    	// more callback to handle Ad events
+    	document.addEventListener('onReceiveAd', function(){
+    	});
+    	document.addEventListener('onFailedToReceiveAd', function(data){
+    	});
+    	document.addEventListener('onPresentAd', function(){
+    	});
+    	document.addEventListener('onDismissAd', function(){
+    	});
+    	document.addEventListener('onLeaveToAd', function(){
+    	});
+    }
+    function createAd() {
+    	if ( window.plugins && window.plugins.Flurry ) {
+    	    var am = window.plugins.Flurry;
+    	    am.createBannerView(
+                                {
+                                'publisherId': adId,
+                                'adSize': am.AD_SIZE.BANNER,
+                                'bannerAtTop': false
+                                }, function() {
+                                am.requestAd( { 'isTesting':true }, function() {
+                                             am.showAd( true );
+                                             }, function() {
+                                             alert('failed to request ad');
+                                             })
+                                }, function(){
+                                alert( "failed to create ad view" );
+                                });
+                                
+                                
+    	} else {
+    		alert('Flurry plugin not available/ready.');
+    	}
+    }
+    function removeAd() {
+        if ( window.plugins && window.plugins.Flurry ) {
+    	    var am = window.plugins.Flurry;
+    	    am.destroyBannerView();
+        }
+
+    }
+    function onDeviceReady() {
+    	createAd();
+    }
+    function showAd( bshow ) {
+    	if ( window.plugins && window.plugins.Flurry ) {
+    	    var am = window.plugins.Flurry;
+    	    am.showAd( bshow, function(){}, function(){ alert('please create ad first'); } );
+    	} else {
+    		alert('Flurry plugin not available/ready.');
+    	} 
+    }
+    function showInterstitialAd() {
+        var am = window.plugins.Flurry;
+        am.createInterstitialView(
+                                  {
+                                  'publisherId': adId,
+                                  },
+                                  function() {
+                                  am.requestInterstitialAd( { 'isTesting':true }, function() {}, function() {
+                                                           alert('failed to request ad');
+                                                           });
+                                  },
+                                  function() {
+                                  alert("Interstitial failed");
+                                  }
+                                  );
+    }
+    function onResize() {
+        var msg = 'web view: ' + window.innerWidth + ' x ' + window.innerHeight;
+        document.getElementById('sizeinfo').innerHTML = msg;
+    }
+    </script>
+    <div id="fullpage">
+    <p>Demo for Flurry Plugin</p>
+    <p><button onclick="createAd();">create Ad</button><br/><button onclick="removeAd();">remove Ad</button></p>
+    <p><button onclick="showAd(true);">show Ad</button><br/><button onclick="showAd(false);">hide Ad</button></p>
+    <p><button onclick="showInterstitialAd();">show Interstitial Ad</button></p>
+    <div id="sizeinfo">width * height</div>
+    <div>Try rotate screen to test the orientation change</div>
+    </div>
+    </body>
+</html>
