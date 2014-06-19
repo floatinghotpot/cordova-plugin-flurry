@@ -58,7 +58,7 @@
                                 {
                                 'publisherId': adId,
                                 'adSize': am.AD_SIZE.BANNER,
-                                'bannerAtTop': false
+                                'bannerAtTop': true
                                 }, function() {
                                 am.requestAd( { 'isTesting':true }, function() {
                                              am.showAd( true );
@@ -99,7 +99,9 @@
                                   'publisherId': adId,
                                   },
                                   function() {
-                                  am.requestInterstitialAd( { 'isTesting':true }, function() {}, function() {
+                                  am.requestInterstitialAd( { 'isTesting':true }, function() {
+					am.showAd( true );
+					}, function() {
                                                            alert('failed to request ad');
                                                            });
                                   },
