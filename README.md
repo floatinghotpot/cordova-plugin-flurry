@@ -12,8 +12,8 @@ Currently, it works on:
 ## See Also ##
 ---------------------------
 Besides using Flurry Ad, you have some other options, all working on cordova:
-* [cordova-plugin-iad](../cordova-plugin-iad), Apple iAd service. 
-* [cordova-plugin-admob](../cordova-plugin-admob), Google AdMob service.
+* [cordova-plugin-iad](https://github.com/floatinghotpot/cordova-plugin-iad), Apple iAd service. 
+* [cordova-plugin-admob](https://github.com/floatinghotpot/cordova-plugin-admob), Google AdMob service.
 
 ## How to use? ##
 ---------------------------
