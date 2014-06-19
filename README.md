@@ -6,8 +6,8 @@ Cordova plugin to support Flurry (analytics and advertisement)
 It's targeted to build with cordova 3.5.
 
 Currently, it works on:
-* iOS, tested.
-* Android, build pass, but not working yet.
+* iOS, tested on iphone/ipad iOS7.
+* Android, tested on 4.4.
 
 How to use?
 ---------------------------
@@ -71,7 +71,9 @@ Call the following code inside onDeviceReady(), because only after device ready 
                   'publisherId': adId,
               },
               function() {
-                  am.requestInterstitialAd( { 'isTesting':true }, function() {}, function() { alert('failed to request ad'); });
+                  am.requestInterstitialAd( { 'isTesting':true }, function() {
+                  	am.showAd( true );
+                  }, function() { alert('failed to request ad'); });
               },
               function() {
                   alert("Interstitial failed");
@@ -111,5 +113,8 @@ This plugin also allows you the option to listen for ad events. The following ev
  
  ![Screenshot](flurry-ipad.jpg)
  
+ Android
+ 
+ ![Screenshot](flurry-android.jpg)
  
  
