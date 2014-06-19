@@ -1,4 +1,4 @@
-cordova-plugin-flurry
+# cordova-plugin-flurry #
 =====================
 
 Cordova plugin to support Flurry (analytics and advertisement)
@@ -9,13 +9,13 @@ Currently, it works on:
 * iOS, tested on iphone/ipad iOS7.
 * Android, tested on 4.4.
 
-See Also
+## See Also ##
 ---------------------------
 Besides using Flurry Ad, you have some other options, all working on cordova:
-[cordova-plugin-iad](../cordova-plugin-iad), Apple iAd service. 
-[cordova-plugin-admob](../cordova-plugin-admob), Google AdMob service.
+* [cordova-plugin-iad](../cordova-plugin-iad), Apple iAd service. 
+* [cordova-plugin-admob](../cordova-plugin-admob), Google AdMob service.
 
-How to use?
+## How to use? ##
 ---------------------------
 To install this plugin, follow the [Command-line Interface Guide](http://cordova.apache.org/docs/en/edge/guide_cli_index.md.html#The%20Command-line%20Interface).
 
@@ -24,7 +24,7 @@ To install this plugin, follow the [Command-line Interface Guide](http://cordova
 
 Note: ensure you have a proper Flurry account and create an Id for your app.
     
-Quick example with cordova command line tool
+## Quick example with cordova command line tool ##
 ------------------------------------------------
     cordova create testflurry com.rjfun.testflurry TestFlurry
     cd testflurry
@@ -42,7 +42,7 @@ Or, just clone the testflurry project from github:
 
     git clone git@github.com:floatinghotpot/testflurry.git
     
-Example javascript 
+## Example javascript  ##
 -------------------------------------------------
 Call the following code inside onDeviceReady(), because only after device ready you will have the plugin working.
 (almost same as cordova-plugin-admob, just plugin name and app key from Ad vendor different)   
@@ -90,7 +90,7 @@ Call the following code inside onDeviceReady(), because only after device ready 
       alert('Flurry plugin not available/ready.');
     }
  
- More ...
+## More ... ##
  --------------------------------------------------
 This plugin also allows you the option to listen for ad events. The following events are supported:
 
@@ -109,7 +109,7 @@ This plugin also allows you the option to listen for ad events. The following ev
  
  See the working example code in [demo under test folder](test/index.html)
  
- Screenshots, Banner and Interstitial Ads
+ ## Screenshots, Banner and Interstitial Ads ##
  ---------------------------------------------------
  iPhone
  
