@@ -9,6 +9,12 @@ Currently, it works on:
 * iOS, tested on iphone/ipad iOS7.
 * Android, tested on 4.4.
 
+See Also
+---------------------------
+Besides using Flurry Ad, you have some other options, all working on cordova:
+[cordova-plugin-iad](../cordova-plugin-iad), Apple iAd service. 
+[cordova-plugin-admob](../cordova-plugin-admob), Google AdMob service.
+
 How to use?
 ---------------------------
 To install this plugin, follow the [Command-line Interface Guide](http://cordova.apache.org/docs/en/edge/guide_cli_index.md.html#The%20Command-line%20Interface).
