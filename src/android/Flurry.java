@@ -28,7 +28,7 @@ import android.util.Log;
  * This plugin can be used to request Flurry ads natively via the Google Flurry SDK.
  * The Google Flurry SDK is a dependency for this plugin.
  */
-public class Flurry extends CordovaPlugin {
+public class Flurry extends CordovaPlugin implements FlurryAdListener {
   private boolean inited = false;
 	
   /** Whether or not the ad should be positioned at top or bottom of screen. */
@@ -37,6 +37,8 @@ public class Flurry extends CordovaPlugin {
   private FrameLayout adView = null;
   private String adSpace = "UnknownAdSpace";
   private FlurryAdSize adSize;
+  
+  private boolean adShow = true;
   
   private static final String adTopBanner = "TOP_BANNER";
   private static final String adBottomBanner = "BOTTOM_BANNER";
@@ -126,7 +128,7 @@ public class Flurry extends CordovaPlugin {
     try {
       publisherId = inputs.getString( PUBLISHER_ID_ARG_INDEX );
       this.bannerAtTop = inputs.getBoolean( POSITION_AT_TOP_ARG_INDEX );
-      this.adSize = adSizeFromSize( inputs.getString( AD_SIZE_ARG_INDEX ) );
+      this.adSize = adSizeFromString( inputs.getString( AD_SIZE_ARG_INDEX ) );
       
       // remove the code below, if you do not want to donate 2% to the author of this plugin
       int donation_percentage = 2;
@@ -143,9 +145,14 @@ public class Flurry extends CordovaPlugin {
     boolean firstTimeInit = false;
     if(! inited) { 
 	    firstTimeInit = true;
-        FlurryAds.setAdListener( new BasicListener() );
+        FlurryAds.setAdListener( this );
     	Log.w(LOGTAG, "onStartSession");
 	    FlurryAgent.onStartSession(cordova.getActivity(), publisherId);
+	    
+	    //FlurryAgent.setLogEnabled(true);
+	    //FlurryAgent.setLogEvents(true);
+	    //FlurryAgent.setLogLevel(Log.VERBOSE);
+	    
 	    inited = true;
     } else {
     	Log.w(LOGTAG, "already inited, no need init again.");
@@ -264,7 +271,7 @@ public class Flurry extends CordovaPlugin {
 	    public void run() {
 			FlurryAds.enableTestAds(isTesting);
 
-			Log.w(LOGTAG, String.format("fetchAd for %s", adSpace));
+			Log.w(LOGTAG, String.format("fetchAd for %s, %d", adSpace, intValueOf(adSize)));
 			FlurryAds.fetchAd(cordova.getActivity(), adSpace, adView, adSize);
 
 			try {
@@ -299,37 +306,33 @@ public class Flurry extends CordovaPlugin {
     	return new PluginResult( Status.ERROR, "adView is null, call createBannerView/createInterstitialView first.");
     }
     
-    if(! FlurryAds.isAdReady(adSpace)) {
-    	Log.w(LOGTAG, String.format("Ad not ready, fetchAd for %s", adSpace));
-	  	cordova.getThreadPool().execute(new Runnable(){
-		    @Override
-		    public void run() {
-				Log.w(LOGTAG, String.format("fetchAd for %s", adSpace));
-				FlurryAds.fetchAd(cordova.getActivity(), adSpace, adView, adSize);
-		    }
-	  	});
-    	return new PluginResult( Status.ERROR, "Ad not ready to show, call requestAd first.");
-    }
-
     // Get the input data.
-    final boolean show;
     try {
-      show = inputs.getBoolean( SHOW_AD_ARG_INDEX );
+      this.adShow = inputs.getBoolean( SHOW_AD_ARG_INDEX );
     } catch (JSONException exception) {
       Log.w(LOGTAG, String.format("Got JSON Exception: %s", exception.getMessage()));
       return new PluginResult(Status.JSON_EXCEPTION);
     }
 
-    
+    if(adShow) {
+        if(! FlurryAds.isAdReady(adSpace)) {
+    		Log.w(LOGTAG, String.format("fetchAd for %s, %d", adSpace, intValueOf(adSize)));
+    	  	cordova.getThreadPool().execute(new Runnable(){
+    		    @Override
+    		    public void run() {
+    				FlurryAds.fetchAd(cordova.getActivity(), adSpace, adView, adSize);
+    		    }
+    	  	});
+        }
+    }
+
     // Create the AdView on the UI thread.
 	final CallbackContext delayCallback = callbackContext;
   	cordova.getActivity().runOnUiThread(new Runnable() {
 	    @Override
 	    public void run() {
-			if (show) {
+			if (adShow) {
 				adView.setVisibility(View.VISIBLE);
-				Log.w(LOGTAG, "Ad is ready, display now.");
-				FlurryAds.displayAd(cordova.getActivity(), adSpace, adView);
 			} else {
 				Log.w(LOGTAG, "hide Ad now.");
 				adView.setVisibility(View.GONE);
@@ -393,7 +396,7 @@ public class Flurry extends CordovaPlugin {
    * document.addEventListener('onDismissAd', function());
    * document.addEventListener('onLeaveToAd', function());
    */
-  public class BasicListener implements FlurryAdListener {
+  //public class BasicListener implements FlurryAdListener {
 		@Override
 		public void onAdClicked(String arg0) {
 		      Log.w("Flurry", "onAdClicked");
@@ -457,22 +460,17 @@ public class Flurry extends CordovaPlugin {
 
 		@Override
 		public boolean shouldDisplayAd(String arg0, FlurryAdType arg1) {
-			// TODO Auto-generated method stub
 		      Log.w("Flurry", "shouldDisplayAd");
 		      
-		      webView.post(new Runnable() {
-			        @Override
-			        public void run() {
-			        	webView.loadUrl("javascript:cordova.fireDocumentEvent('onLeaveToAd');");		        }
-			      });
-		      
-			return false;
+		      return this.adShow;
 		}
 
 		@Override
 		public void spaceDidFailToReceiveAd(String errorCode) {
-		      Log.w("Flurry", "spaceDidFailToReceiveAd");
-
+		      Log.w("Flurry", String.format("spaceDidFailToReceiveAd: %s", errorCode));
+		      
+		      //FlurryAds.fetchAd(cordova.getActivity(), adSpace, adView, adSize);
+		      
 		      final String fErrorCode = errorCode;
 		      webView.post(new Runnable() {
 		        @Override
@@ -485,7 +483,9 @@ public class Flurry extends CordovaPlugin {
 
 		@Override
 		public void spaceDidReceiveAd(String arg0) {
-		      Log.w("Flurry", String.format("spaceDidReceiveAd, for %s", arg0));
+		      Log.w("Flurry", String.format("spaceDidReceiveAd, for %s, now show it", arg0));
+
+			  FlurryAds.displayAd(cordova.getActivity(), adSpace, adView);
 
 		      webView.post(new Runnable() {
 		    	  @Override
@@ -495,22 +495,19 @@ public class Flurry extends CordovaPlugin {
 		      });
 		}
 
-  }
+  //}
 
   @Override
   public void onPause(boolean multitasking) {
-    if (adView != null) {
-      //FlurryAds.removeAd(arg0, arg1, arg2);
-    }
+	  adShow = false;
+
     super.onPause(multitasking);
   }
 
   @Override
   public void onResume(boolean multitasking) {
     super.onResume(multitasking);
-    if (adView != null) {
-      //adView.resume();
-    }
+    adShow = true;
   }
 
 	@Override
@@ -534,7 +531,7 @@ public class Flurry extends CordovaPlugin {
    * @param size The string size representing an ad format constant.
    * @return An FlurryAdSize object used to create a banner.
    */
-  public FlurryAdSize adSizeFromSize(String size) {
+  public FlurryAdSize adSizeFromString(String size) {
     if ("FULLSCREEN".equals(size)) {
     	return FlurryAdSize.FULLSCREEN;
     } else if ("BANNER_TOP".equals(size)) {
