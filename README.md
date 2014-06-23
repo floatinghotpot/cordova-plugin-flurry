@@ -123,4 +123,15 @@ This plugin also allows you the option to listen for ad events. The following ev
  
  ![Screenshot](flurry-android.jpg)
  
+ ## Donate ##
+----------------------------------------------
+You can use this cordova plugin for free. 
+
+To support this project, donation is welcome.
+
+Donation can be accepted in either of following ways:
+* Keep the donation code to share 2% Ad traffic. (Just remove it, if you don't hope so)
+* [http://floatinghotpot.github.io/#donate](Donate directly via Paypal)
+
+ 
  
