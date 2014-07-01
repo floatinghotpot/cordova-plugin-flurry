@@ -61,7 +61,7 @@
                                 'bannerAtTop': true
                                 }, function() {
                                 am.requestAd( { 'isTesting':true }, function() {
-                                             am.showAd( true );
+                                             am.showAd( true, function(){ onResize(); },function(){} );
                                              }, function() {
                                              alert('failed to request ad');
                                              })
@@ -77,7 +77,7 @@
     function removeAd() {
         if ( window.plugins && window.plugins.Flurry ) {
     	    var am = window.plugins.Flurry;
-    	    am.destroyBannerView();
+    	    am.destroyBannerView({},function(){onResize();},function(){});
         }
 
     }
@@ -87,7 +87,7 @@
     function showAd( bshow ) {
     	if ( window.plugins && window.plugins.Flurry ) {
     	    var am = window.plugins.Flurry;
-    	    am.showAd( bshow, function(){}, function(){ alert('please create ad first'); } );
+    	    am.showAd( bshow, function(){onResize();}, function(){ alert('please create ad first'); } );
     	} else {
     		alert('Flurry plugin not available/ready.');
     	} 
@@ -100,7 +100,7 @@
                                   },
                                   function() {
                                   am.requestInterstitialAd( { 'isTesting':true }, function() {
-					am.showAd( true );
+					//am.showAd( true ); // it's for banner ad only
 					}, function() {
                                                            alert('failed to request ad');
                                                            });

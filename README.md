@@ -78,7 +78,6 @@ Call the following code inside onDeviceReady(), because only after device ready 
               },
               function() {
                   am.requestInterstitialAd( { 'isTesting':true }, function() {
-                  	am.showAd( true );
                   }, function() { alert('failed to request ad'); });
               },
               function() {
