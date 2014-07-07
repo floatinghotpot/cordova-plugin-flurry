@@ -6,10 +6,10 @@
 	version="1.0.0">
       
     <name>Flurry</name>
-	<description>Add Flurry to your cordova app, earn more revenue with Flurry for publishers</description>
-	<author>Liming Xie</author>
+	<description>Add Flurry Ads to your cordova app, earn more revenue with Flurry for publishers</description>
+	<author>Raymond Xie Liming</author>
 	<license>MIT</license>
-<keywords>ad,flurry</keywords>
+<keywords>ad,ads,flurry,admob</keywords>
     <repo>https://github.com/floatinghotpot/cordova-plugin-flurry.git</repo>
     <issue>https://github.com/floatinghotpot/cordova-plugin-flurry/issues</issue>
 
