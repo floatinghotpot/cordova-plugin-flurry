@@ -5,11 +5,11 @@
 	id="com.rjfun.cordova.plugin.flurry"
 	version="1.0.0">
       
-    <name>Flurry</name>
-	<description>Add Flurry Ads to your cordova app, earn more revenue with Flurry for publishers</description>
+    <name>FlurryAd</name>
+	<description>Add Flurry Ads to cordova app, earn more revenue with Flurry for publishers</description>
 	<author>Raymond Xie Liming</author>
 	<license>MIT</license>
-<keywords>ad,ads,flurry,admob</keywords>
+    <keywords>ad,ads,flurry,admob</keywords>
     <repo>https://github.com/floatinghotpot/cordova-plugin-flurry.git</repo>
     <issue>https://github.com/floatinghotpot/cordova-plugin-flurry/issues</issue>
 
@@ -23,61 +23,26 @@
 
     <!-- android -->
     <platform name="android">
-        <dependency id="com.google.playservices" version=">=15.0.1"/>
+        <dependency id="com.google.admobsdk-googleplay" version=">=4.4.0"/>
+	<dependency id="com.flurry.sdk-android" version=">=4.0.0"/>
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="Flurry">
                 <param name="android-package" value="com.rjfun.cordova.plugin.Flurry"/>
             </feature>
         </config-file>
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <meta-data android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version"/>
-        </config-file>
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
-			<activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" 
-			    android:name="com.google.android.gms.ads.AdActivity" />
-			<activity android:name="com.flurry.android.FlurryFullscreenTakeoverActivity"
-			      android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" ></activity>
-          </config-file>
-        <config-file target="AndroidManifest.xml" parent="/*">
-			<uses-permission android:name="android.permission.INTERNET"/>
-			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-			<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    		<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-          </config-file>
-          
         <source-file src="src/android/Flurry.java" target-dir="src/com/rjfun/cordova/plugin" />
-        <source-file src="src/android/FlurryAds-4.0.0.jar" target-dir="libs" />
-        <source-file src="src/android/FlurryAnalytics-4.0.0.jar" target-dir="libs" />
      </platform>
      
      <!-- ios -->
      <platform name="ios">    
+	 <dependency id="com.flurry.sdk-ios" version=">=5.1.0"/>
          <config-file target="config.xml" parent="/*">
              <feature name="Flurry">
                  <param name="ios-package" value="CDVFlurry" />
              </feature>
          </config-file>
-         
          <header-file src="src/ios/CDVFlurry.h" />
          <source-file src="src/ios/CDVFlurry.m" />
-         
-         <header-file src="src/ios/Flurry.h" />
-         <header-file src="src/ios/FlurryAds.h" />
-         <header-file src="src/ios/FlurryAdDelegate.h" />
-         <source-file src="src/ios/libFlurry_5.1.0.a" framework="true" />
-         <source-file src="src/ios/libFlurryAds_5.1.0.a" framework="true" />
-         
-         <framework src="AdSupport.framework" />
-         <framework src="CoreGraphics.framework" />
-         <framework src="Foundation.framework" />
- 	     <framework src="MediaPlayer.framework" />
- 	     <framework src="Security.framework" />
- 	     <framework src="StoreKit.framework" />
-         <framework src="MessageUI.framework" />
-         <framework src="SystemConfiguration.framework" />
-         <framework src="UIKit.framework" />
-         <framework src="libz.dylib" />
-	</platform>
+    </platform>
 
 </plugin>

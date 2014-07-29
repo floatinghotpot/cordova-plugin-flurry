@@ -19,7 +19,6 @@ Besides using Flurry Ad, you have some other options, all working on cordova:
 ---------------------------
 To install this plugin, follow the [Command-line Interface Guide](http://cordova.apache.org/docs/en/edge/guide_cli_index.md.html#The%20Command-line%20Interface).
 
-    cordova plugin add https://github.com/MobileChromeApps/google-play-services.git
     cordova plugin add https://github.com/floatinghotpot/cordova-plugin-flurry.git
 
 Note: ensure you have a proper Flurry account and create an Id for your app.
@@ -30,12 +29,10 @@ Note: ensure you have a proper Flurry account and create an Id for your app.
     cd testflurry
     cordova platform add android
     cordova platform add ios
-    cordova plugin add https://github.com/MobileChromeApps/google-play-services.git
     cordova plugin add https://github.com/floatinghotpot/cordova-plugin-flurry.git
-    mv www www.default
-    mkdir www
+    rm -r www/*
     cp plugins/com.rjfun.cordova.plugin.flurry/test/index.html www/
-    cordova build
+    cordova prepare; cordova run android; cordova run ios; 
     ... cordova emulate android/ios, or import the android project into eclipse or ios project into xcode
 
 Or, just clone the testflurry project from github:
@@ -124,12 +121,9 @@ This plugin also allows you the option to listen for ad events. The following ev
  
  ## Donate ##
 ----------------------------------------------
-You can use this cordova plugin for free. 
-
-To support this project, donation is welcome.
+You can use this cordova plugin for free. To support this project, donation is welcome.
 
 Donation can be accepted in either of following ways:
-* Keep the donation code to share 2% Ad traffic. (Just remove it, if you don't hope so)
 * [Donate directly via Paypal](http://floatinghotpot.github.io/#donate)
 
  
