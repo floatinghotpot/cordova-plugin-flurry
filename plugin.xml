@@ -24,7 +24,7 @@
     <!-- android -->
     <platform name="android">
         <dependency id="com.google.admobsdk-googleplay" version=">=4.4.0"/>
-	<dependency id="com.flurry.sdk-android" version=">=4.0.0"/>
+	<dependency id="com.flurry.sdk-android" version=">=4.2.0"/>
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="Flurry">
                 <param name="android-package" value="com.rjfun.cordova.plugin.Flurry"/>
