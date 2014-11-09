@@ -119,17 +119,13 @@ Check the [test/index.html] (https://github.com/floatinghotpot/cordova-plugin-fl
 
 ## Screenshots ##
 
-iPhone
+iPhone Banner | iPhone Interstitial
+-----|-----------
+![ScreenShot](docs/iphone_banner.jpg) | ![ScreenShot](docs/iphone_interstitial.jpg)
 
-![ScreenShot](docs/flurry-iphone.jpg)
+Impressive Video Ad
 
-iPad
-
-![ScreenShot](docs/flurry-ipad.jpg)
-
-Android
-
-![ScreenShot](docs/flurry-android.jpg)
+![ScreenShot](docs/iphone_videoad.jpg)
 
 ## Credits ##
 
