@@ -99,10 +99,6 @@ hideBanner();
 // for interstitial
 prepareInterstitial(adId/options, success, fail);
 showInterstitial();
-// for native ad
-createNativeAd(adId, success, fail);
-removeNativeAd(adId);
-setNativeAdClickArea(adId,x,y,w,h);
 ```
 
 ## Detailed Documentation ##
