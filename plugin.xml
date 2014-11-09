@@ -2,14 +2,14 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	id="com.rjfun.cordova.plugin.flurry"
-	version="1.0.1">
+	id="com.rjfun.cordova.flurryads"
+	version="2.0.0">
       
-    <name>FlurryAd</name>
+    <name>Flurry Ad</name>
 	<description>Add Flurry Ads to cordova app, earn more revenue with Flurry for publishers</description>
-	<author>Raymond, Xie Liming</author>
+	<author>Liming Xie</author>
 	<license>MIT</license>
-    <keywords>ad,ads,flurry,admob</keywords>
+    <keywords>ad,flurry,rjfun</keywords>
     <repo>https://github.com/floatinghotpot/cordova-plugin-flurry.git</repo>
     <issue>https://github.com/floatinghotpot/cordova-plugin-flurry/issues</issue>
 
@@ -17,31 +17,31 @@
 	    <engine name="cordova" version=">=3.0" />
 	</engines>
 
-    <js-module src="www/Flurry.js" name="Flurry">
-        <clobbers target="window.plugins.Flurry" />
+    <js-module src="www/Flurry.js" name="FlurryAds">
+        <clobbers target="window.FlurryAds" />
     </js-module>
 
+	<dependency id="com.rjfun.cordova.ad" version=">=1.0.0"/>
 	<dependency id="com.flurry.sdk" version=">=5.4.0"/>
 	
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="Flurry">
-                <param name="android-package" value="com.rjfun.cordova.plugin.Flurry"/>
+            <feature name="FlurryAds">
+                <param name="android-package" value="com.rjfun.cordova.flurry.FlurryAdPlugin"/>
             </feature>
         </config-file>
-        <source-file src="src/android/Flurry.java" target-dir="src/com/rjfun/cordova/plugin" />
+        <source-file src="src/android/cordova-flurryads.jar" target-dir="libs" />
      </platform>
      
      <!-- ios -->
      <platform name="ios">    
          <config-file target="config.xml" parent="/*">
-             <feature name="Flurry">
-                 <param name="ios-package" value="CDVFlurry" />
+             <feature name="FlurryAds">
+                 <param name="ios-package" value="FlurryAdPlugin" />
              </feature>
          </config-file>
-         <header-file src="src/ios/CDVFlurry.h" />
-         <source-file src="src/ios/CDVFlurry.m" />
+         <source-file src="src/ios/libCordovaFlurryAds.a" framework="true" compiler-flags="-force_load"/>
     </platform>
 
 </plugin>

@@ -1,124 +1,158 @@
-# cordova-plugin-flurry #
-=====================
+# Cordova Plugin for Flurry Ads #
 
-Cordova plugin to support Flurry (analytics and advertisement)
+Present Flurry Ads in Mobile App/Games natively with single line of JavaScript. 
 
-It's targeted to build with cordova 3.5.
+Highlights:
+- [x] Easy-to-use APIs. Display Ad with single line of Js code.
+- [x] Support Banner, Interstitial Ad, and Video Ad.
+- [x] One plugin supports both Android and iOS platform.
+- [x] Fixed and overlapped mode.
+- [x] Auto fit on orientation change.
+- [x] Same API with other RjFun Ad Plugins, easily to switch to other Ad.
+- [x] Actively maintained, prompt support.
 
-Currently, it works on:
-* iOS, tested on iphone/ipad iOS7.
-* Android, tested on 4.4.
+Compatible with:
 
-## See Also ##
----------------------------
-Besides using Flurry Ad, you have some other options, all working on cordova:
-* [cordova-plugin-iad](https://github.com/floatinghotpot/cordova-plugin-iad), Apple iAd service. 
-* [cordova-plugin-admob](https://github.com/floatinghotpot/cordova-plugin-admob), Google AdMob service.
+* Cordova CLI, v3.5+
+* Intel XDK and Crosswalk, r1095+
+* IBM Worklight, v6.2+
 
 ## How to use? ##
----------------------------
-To install this plugin, follow the [Command-line Interface Guide](http://cordova.apache.org/docs/en/edge/guide_cli_index.md.html#The%20Command-line%20Interface).
 
-    cordova plugin add https://github.com/floatinghotpot/cordova-plugin-flurry.git
+If use with Cordova CLI:
+```
+cordova plugin add com.rjfun.cordova.flurryads
+```
 
-Note: ensure you have a proper Flurry account and create an Id for your app.
-    
-## Quick example with cordova command line tool ##
-------------------------------------------------
-    cordova create testflurry com.rjfun.testflurry TestFlurry
-    cd testflurry
-    cordova platform add android
-    cordova platform add ios
-    cordova plugin add https://github.com/floatinghotpot/cordova-plugin-flurry.git
-    rm -r www/*
-    cp plugins/com.rjfun.cordova.plugin.flurry/test/index.html www/
-    cordova prepare; cordova run android; cordova run ios; 
-    ... cordova emulate android/ios, or import the android project into eclipse or ios project into xcode
+If use with Intel XDK:
+Project -> CORDOVA 3.X HYBRID MOBILE APP SETTINGS -> PLUGINS AND PERMISSIONS -> Third-Party Plugins ->
+Add a Third-Party Plugin -> Get Plugin from the Web, input:
+```
+Name: FlurryAdsPluginPro
+Plugin ID: com.rjfun.cordova.flurryads
+[x] Plugin is located in the Apache Cordova Plugins Registry
+```
 
-Or, just clone the testflurry project from github:
+## Quick Start Example Code ##
 
-    git clone git@github.com:floatinghotpot/testflurry.git
-    
-## Example javascript  ##
--------------------------------------------------
-Call the following code inside onDeviceReady(), because only after device ready you will have the plugin working.
-(almost same as cordova-plugin-admob, just plugin name and app key from Ad vendor different)   
- 
-    var flurry_ios_key = '2DYY249X5G798HMF3MTH';
-    var flurry_android_key = 'G56KN4J49YT66CFRD5K6';
-    var adId = (navigator.userAgent.indexOf('Android') >=0) ? flurry_android_key : flurry_ios_key;
- 
-    if( window.plugins && window.plugins.Flurry ) {
-        var am = window.plugins.Flurry;
-    
-        am.createBannerView( 
-            {
-            'publisherId': adId,
-            'adSize': am.AD_SIZE.BANNER,
-            'bannerAtTop': false
-            }, 
-            function() {
-        	    am.requestAd(
-        		    { 'isTesting':true }, 
-            		function(){
-            			am.showAd( true );
-            		}, 
-            		function(){ alert('failed to request ad'); }
-            	);
-            }, 
-            function(){ alert('failed to create banner view'); }
-        );
-        
-        am.createInterstitialView(
-              {
-                  'publisherId': adId,
-              },
-              function() {
-                  am.requestInterstitialAd( { 'isTesting':true }, function() {
-                  }, function() { alert('failed to request ad'); });
-              },
-              function() {
-                  alert("Interstitial failed");
-              }
-          );
-        
-    } else {
-      alert('Flurry plugin not available/ready.');
-    }
- 
-## More ... ##
- --------------------------------------------------
-This plugin also allows you the option to listen for ad events. The following events are supported:
+Step 1: Prepare your Flurry Id for your app, create it in [Flurry Developers website](https://www.flurry.com/)
 
-    	// more callback to handle Ad events
-    	document.addEventListener('onReceiveAd', function(){
-    	});
-    	document.addEventListener('onFailedToReceiveAd', function(data){
-    		// alert( data.error );
-    	});
-    	document.addEventListener('onPresentAd', function(){
-    	});
-    	document.addEventListener('onDismissAd', function(){
-    	});
-    	document.addEventListener('onLeaveToAd', function(){
-    	});   
- 
- See the working example code in [demo under test folder](test/index.html)
- 
- ## Screenshots, Banner and Interstitial Ads ##
- ---------------------------------------------------
- iPhone
- 
- ![Screenshot](flurry-iphone.jpg)
- 
- iPad, Landscape
- 
- ![Screenshot](flurry-ipad.jpg)
- 
- Android
- 
- ![Screenshot](flurry-android.jpg)
- 
+```javascript
+var ad_units = {
+	ios : { 
+		banner:"2DYY249X5G798HMF3MTH",
+		interstitial:"2DYY249X5G798HMF3MTH"
+	},
+	android : {
+		banner:"G56KN4J49YT66CFRD5K6",
+		interstitial:"G56KN4J49YT66CFRD5K6"
+	}
+};
+
+// select the right Ad Id according to platform
+var adid = (/(android)/i.test(navigator.userAgent)) ? ad_units.android : ad_units.ios;
+```
+
+Step 2: Create a banner with single line of javascript
+
+```javascript
+// it will display smart banner at top center, using the default options
+if(FlurryAds) FlurryAds.createBanner( adid.banner );
+```
+
+Or, show the banner Ad in some other way:
+
+```javascript
+// or, show a default banner at bottom
+if(FlurryAds) FlurryAds.createBanner( {
+	adId: adid.banner, 
+	position:FlurryAds.AD_POSITION.BOTTOM_CENTER, 
+	autoShow:true} );
+```
+
+Step 3: Prepare an interstitial, and show it when needed
+
+```javascript
+// preppare and load ad resource in background, e.g. at begining of game level
+if(FlurryAds) FlurryAds.prepareInterstitial( {adId:adid.interstitial, autoShow:false} );
+
+// show the interstitial later, e.g. at end of game level
+if(FlurryAds) FlurryAds.showInterstitial();
+```
+
+You can even embed the Ad into web content with Native Ad.
+
+Check the example code [test/index.html] (https://github.com/floatinghotpot/cordova-plugin-flurry/blob/master/test/index.html)
+
+## Javascript API Overview ##
+
+Methods:
+```javascript
+// set default value for other methods
+setOptions(options, success, fail);
+// for banner
+createBanner(adId/options, success, fail);
+removeBanner();
+showBanner(position);
+showBannerAtXY(x, y);
+hideBanner();
+// for interstitial
+prepareInterstitial(adId/options, success, fail);
+showInterstitial();
+// for native ad
+createNativeAd(adId, success, fail);
+removeNativeAd(adId);
+setNativeAdClickArea(adId,x,y,w,h);
+```
+
+## Detailed Documentation ##
+
+The APIs, Events and Options are detailed documented.
+
+Read the detailed API Reference Documentation [English](https://github.com/floatinghotpot/cordova-plugin-flurry/wiki).
+
+## FAQ ##
+
+If encounter problem when using the plugin, please read the [FAQ](https://github.com/floatinghotpot/cordova-plugin-flurry/wiki/FAQ) first.
+
+## Full Example Code ##
+
+This FlurryAds Plugin Pro offers the most flexibility and many options.
+
+Check the [test/index.html] (https://github.com/floatinghotpot/cordova-plugin-fllurry/blob/master/test/index.html).
+
+## Screenshots ##
+
+iPhone
+
+![ScreenShot](docs/flurry-iphone.jpg)
+
+iPad
+
+![ScreenShot](docs/flurry-ipad.jpg)
+
+Android
+
+![ScreenShot](docs/flurry-android.jpg)
+
+## Credits ##
+
+This FlurryAds Plugin Pro is published in a win-win partnership model:
+- It's FREE. 
+- It's closed source.
+- 2% Ad traffic will be shared, as return for the support and maintenance effort.
+- You will get commercial-level support with high priority, prompt and professional.
+
+If you hope to make the Ad 100% under your control and keep 100% Ad revenue, you can also consider spending $20 to [get a license key](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=C654HGZVC43T4) to remove the 2% Ad traffic sharing.
+It's much cheaper than [the $50 iOS only AdMob plugin for unity](https://prime31.com/plugins). 
+
+Then set the license key in options (either API setOptions, or createBanner, or prepareInterstitial):
+```javascript
+    license: 'username@gmail.com/xxxxxxxxxxxxxxx',
+```
+
+FlurryAds Plugin Pro is one of the best choice for HTML5/Cordova/PhoneGap/XDK/Construct2 app/games.
+
 ## See Also ##
 
 Cordova/PhoneGap plugins for the world leading Mobile Ad services:
@@ -127,8 +161,9 @@ Cordova/PhoneGap plugins for the world leading Mobile Ad services:
 * [mMedia Plugin Pro](https://github.com/floatinghotpot/cordova-plugin-mmedia), enhanced mMedia plugin, support impressive video Ad.
 * [iAd Plugin](https://github.com/floatinghotpot/cordova-plugin-iad), Apple iAd service. 
 * [FlurryAds Plugin](https://github.com/floatinghotpot/cordova-plugin-flurry), Yahoo Flurry Ads service.
-* [MoPub Plugin Pro](https://github.com/floatinghotpot/cordova-plugin-mopub), MobPub Ads service.
 * [MobFox Plugin Pro](https://github.com/floatinghotpot/cordova-mobfox-pro), enhanced MobFox plugin, support video Ad and many other Ad network with server-side integration.
+* [MoPub Plugin Pro](https://github.com/floatinghotpot/cordova-plugin-mopub), MobPub Ads service.
+* [FacebookAds Plugin Pro](https://github.com/floatinghotpot/cordova-plugin-facebookads), Facebook Audience Network Ads service.
 
 More Cordova/PhoneGap plugins by Raymond Xie, [click here](http://floatinghotpot.github.io/).
 

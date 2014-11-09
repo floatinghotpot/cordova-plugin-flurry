@@ -1,137 +1,176 @@
 <!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-        <title>Hello World</title>
-        <script type="text/javascript" src="cordova.js"></script>
-        <style type="text/css">
-            html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background-color:white; }
-            div#fullpage { width:100%; height:100%; margin:0; padding:0; border:0px solid red; text-align:center; vertical-align:middle; }
-            button { font-size: 22px; }
-        </style>
-    </head>
-    <body onload="onLoad()" onresize="onResize()">
-    <script>
-    var flurry_ios_key = '2DYY249X5G798HMF3MTH';
-    var flurry_android_key = 'G56KN4J49YT66CFRD5K6';
-    var adId = (navigator.userAgent.indexOf('Android') >=0) ? flurry_android_key : flurry_ios_key;
-    
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+<title>Hello World</title>
+<script type="text/javascript" src="cordova.js"></script>
+<style type="text/css">
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: gray;
+	color: white;
+}
+
+div#fullpage {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0px solid red;
+	text-align: center;
+	vertical-align: middle;
+}
+
+button {
+	font-size: 18px;
+}
+</style>
+</head>
+<body onload="onLoad()" onresize="onResize()">
+	<script>
     function onLoad() {
-    	document.addEventListener("deviceready", onDeviceReady, false);
-    	
-    	// more callback to handle Ad events
-    	document.addEventListener('onReceiveAd', function(){
-    	});
-    	document.addEventListener('onFailedToReceiveAd', function(data){
-    	});
-    	document.addEventListener('onPresentAd', function(){
-    	});
-    	document.addEventListener('onDismissAd', function(){
-    	});
-    	document.addEventListener('onLeaveToAd', function(){
-    	});
-    }
-    function createAd() {
-    	if ( window.plugins && window.plugins.Flurry ) {
-    	    var am = window.plugins.Flurry;
-    	    am.createBannerView(
-                                {
-                                'publisherId': adId,
-                                'adSize': am.AD_SIZE.BANNER,
-                                'bannerAtTop': true
-                                }, function() {
-                                am.requestAd( { 'isTesting':true }, function() {
-                                             am.showAd( true, function(){ onResize(); },function(){} );
-                                             }, function() {
-                                             alert('failed to request ad');
-                                             })
-                                }, function(){
-                                alert( "failed to create ad view" );
-                                });
-                                
-                                
-    	} else {
-    		alert('Flurry plugin not available/ready.');
-    	}
-    }
-    function removeAd() {
-        if ( window.plugins && window.plugins.Flurry ) {
-    	    var am = window.plugins.Flurry;
-    	    am.destroyBannerView({},function(){onResize();},function(){});
+        if(( /(ipad|iphone|ipod|android)/i.test(navigator.userAgent) )) {
+            document.addEventListener('deviceready', initApp, false);
+        } else {
+            initApp();
         }
+    }
 
-    }
-    function onDeviceReady() {
-    	createAd();
-    }
-    function showAd( bshow ) {
-    	if ( window.plugins && window.plugins.Flurry ) {
-    	    var am = window.plugins.Flurry;
-    	    am.showAd( bshow, function(){onResize();}, function(){ alert('please create ad first'); } );
-    	} else {
-    		alert('Flurry plugin not available/ready.');
-    	} 
-    }
-    function showInterstitialAd() {
-        var am = window.plugins.Flurry;
-        am.createInterstitialView(
-                                  {
-                                  'publisherId': adId,
-                                  },
-                                  function() {
-                                  am.requestInterstitialAd( { 'isTesting':true }, function() {
-					//am.showAd( true ); // it's for banner ad only
-					}, function() {
-                                                           alert('failed to request ad');
-                                                           });
-                                  },
-                                  function() {
-                                  alert("Interstitial failed");
-                                  }
-                                  );
-    }
-    function onResize() {
-        var msg = 'web view: ' + window.innerWidth + ' x ' + window.innerHeight;
-        document.getElementById('sizeinfo').innerHTML = msg;
-    }
-    </script>
-    <div id="fullpage">
-    <p>Demo for Flurry Plugin</p>
-    <p><button onclick="createAd();">create Ad</button><br/><button onclick="removeAd();">remove Ad</button></p>
-    <p><button onclick="showAd(true);">show Ad</button><br/><button onclick="showAd(false);">hide Ad</button></p>
-    <p><button onclick="showInterstitialAd();">show Interstitial Ad</button></p>
-    <div id="sizeinfo">width * height</div>
-    <div>Try rotate screen to test the orientation change</div>
+    var ad_units = {
+            ios : '2DYY249X5G798HMF3MTH',
+            android : 'G56KN4J49YT66CFRD5K6'
+        };
+        var adid = ( /(android)/i.test(navigator.userAgent) ) ? ad_units.android : ad_units.ios;
+        
+        function initApp() {
+        	if (! FlurryAds ) { alert( 'flurry ads plugin not ready' ); return; }
+        	
+            initAd();
+            
+            // display the banner at startup
+            createSelectedBanner();
+        }
+        function initAd(){
+            var defaultOptions = {
+                // adSize: 'SMART_BANNER',
+                // width: integer, // valid when set adSize 'CUSTOM'
+                // height: integer, // valid when set adSize 'CUSTOM'
+                position: FlurryAds.AD_POSITION.BOTTOM_CENTER,
+                // x: integer,		// valid when set position to 0 / POS_XY
+                // y: integer,		// valid when set position to 0 / POS_XY
+                isTesting: true, // set to true, to receiving test ad for testing purpose
+                // autoShow: true // auto show interstitial ad when loaded, set to false if prepare/show
+            };
+            FlurryAds.setOptions( defaultOptions );
+            registerAdEvents();
+        }
+        // optional, in case respond to events or handle error
+        function registerAdEvents() {
+            // new events, with variable to differentiate: adNetwork, adType, adEvent
+            document.addEventListener('onAdFailLoad', function(data){ 
+            	alert('error: ' + data.error + 
+            			', reason: ' + data.reason + 
+            			', adNetwork:' + data.adNetwork + 
+            			', adType:' + data.adType + 
+            			', adEvent:' + data.adEvent); // adType: 'banner' or 'interstitial'
+            });
+            document.addEventListener('onAdLoaded', function(data){});
+            document.addEventListener('onAdPresent', function(data){});
+            document.addEventListener('onAdLeaveApp', function(data){});
+            document.addEventListener('onAdDismiss', function(data){});
+        }
+        
+        // click button to call following functions
+        function getSelectedAdSize() {
+            var i = document.getElementById("adSize").selectedIndex;
+            var items = document.getElementById("adSize").options;
+            return items[i].value;
+        }
+        function getSelectedPosition() {
+            var i = document.getElementById("adPosition").selectedIndex;
+            var items = document.getElementById("adPosition").options;
+            return parseInt( items[i].value );
+        }
+        function createSelectedBanner() {
+        	var overlap = document.getElementById('overlap').checked;
+            FlurryAds.createBanner( {adId:adid, overlap:overlap, adSize: getSelectedAdSize(), position:getSelectedPosition()} );
+        }
+        function createBannerOfGivenSize() {
+            var w = document.getElementById('w').value;
+            var h = document.getElementById('h').value;
+            
+            FlurryAds.createBanner( {adId:adid,
+                               adSize:'CUSTOM', width:w, height:h,
+                               position:getSelectedPosition()} );
+        }
+        function showBannerAtSelectedPosition() {
+            FlurryAds.showBanner( getSelectedPosition() );
+        }
+        function showBannerAtGivenXY() {
+            var x = document.getElementById('x').value;
+            var y = document.getElementById('y').value;
+            FlurryAds.showBannerAtXY(x, y);
+        }
+        function prepareInterstitial() {
+            var autoshow = document.getElementById('autoshow').checked;
+            FlurryAds.prepareInterstitial({adId:adid, autoShow:autoshow});
+        }
+        function onResize(){
+            var s = document.getElementById('sizeinfo');
+            s.innerHTML = "web view: " + window.innerWidth + " x " + window.innerHeight;
+        }
+        </script>
+	<div id="fullpage">
+		<p>Demo for FlurryAds Plugin</p>
+		Banner<br /> Standard: <select id="adSize">
+			<option value='SMART_BANNER'>SMART_BANNER</option>
+			<option value='BANNER'>BANNER</option>
+			<option value='MEDIUM_RECTANGLE'>MEDIUM_RECTANGLE</option>
+			<option value='FULL_BANNER'>FULL_BANNER</option>
+			<option value='LEADERBOARD'>LEADERBOARD</option>
+			<option value='SKYSCRAPER'>SKYSCRAPER</option>
+		</select><br /> <input type='checkbox' id='overlap' />overlap
+		<button onclick="createSelectedBanner();">create</button>
+		<br /> Custom Size: (<input id='w' type='text' size=3 /> x <input
+			id='h' type='text' size=3>)
+		<button onclick="createBannerOfGivenSize();">create</button>
+		<br />
 
-<p class='subtitle'>Donation via PayPal</p>
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="G5EKTLZ3GQDTU">
-<input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
-<img alt="" border="0" src="https://www.paypalobjects.com/zh_HK/i/scr/pixel.gif" width="1" height="1">
-<p>Note: Donate to Raymond, HandyWit (HK)</p>
-</form>
+		<button onclick="FlurryAds.removeBanner();">remove banner</button>
 
-    </div>
-    </body>
+		<hr />
+		<select id="adPosition">
+			<option value='1'>Top Left</option>
+			<option value='2'>Top Center</option>
+			<option value='3'>Top Right</option>
+			<option value='4'>Left</option>
+			<option value='5'>Center</option>
+			<option value='6'>Right</option>
+			<option value='7'>Bottom Left</option>
+			<option value='8' selected>Bottom Center</option>
+			<option value='9'>Bottom Right</option>
+		</select>
+		<button onclick="showBannerAtSelectedPosition();">show</button>
+		<br /> (<input id='x' type='text' size=3 />,<input id='y'
+			type='text' size=3>)
+		<button onclick="showBannerAtGivenXY();">show At XY</button>
+		<br />
+
+		<button onclick="FlurryAds.hideBanner();">hide banner</button>
+		<hr />
+
+		<p>Interstitial</p>
+		<input type='checkbox' id='autoshow' checked />auto show when ready<br />
+		<button onclick="prepareInterstitial();">Prepare</button>
+		<button onclick="FlurryAds.showInterstitial();">Show</button>
+		<div id='sizeinfo'></div>
+	</div>
+</body>
 </html>
