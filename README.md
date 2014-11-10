@@ -80,8 +80,6 @@ if(FlurryAds) FlurryAds.prepareInterstitial( {adId:adid.interstitial, autoShow:f
 if(FlurryAds) FlurryAds.showInterstitial();
 ```
 
-You can even embed the Ad into web content with Native Ad.
-
 Check the example code [test/index.html] (https://github.com/floatinghotpot/cordova-plugin-flurry/blob/master/test/index.html)
 
 ## Javascript API Overview ##
