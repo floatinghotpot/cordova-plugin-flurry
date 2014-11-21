@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	id="com.rjfun.cordova.flurryads"
-	version="2.0.0">
+	version="2.0.1">
       
     <name>Flurry Ad</name>
 	<description>Add Flurry Ads to cordova app, earn more revenue with Flurry for publishers</description>
@@ -21,8 +21,8 @@
         <clobbers target="window.FlurryAds" />
     </js-module>
 
-	<dependency id="com.rjfun.cordova.ad" version=">=1.0.0"/>
-	<dependency id="com.flurry.sdk" version=">=5.4.0"/>
+	<dependency id="com.rjfun.cordova.ad"/>
+	<dependency id="com.flurry.sdk"/>
 	
     <!-- android -->
     <platform name="android">
@@ -31,7 +31,7 @@
                 <param name="android-package" value="com.rjfun.cordova.flurry.FlurryAdPlugin"/>
             </feature>
         </config-file>
-        <source-file src="src/android/cordova-flurryads.jar" target-dir="libs" />
+        <source-file src="src/android/FlurryAdPlugin.java" target-dir="src/com/rjfun/cordova/flurry" />
      </platform>
      
      <!-- ios -->
@@ -41,7 +41,8 @@
                  <param name="ios-package" value="FlurryAdPlugin" />
              </feature>
          </config-file>
-         <source-file src="src/ios/libCordovaFlurryAds.a" framework="true" compiler-flags="-force_load"/>
+         <header-file src="src/ios/FlurryAdPlugin.h"/>
+         <source-file src="src/ios/FlurryAdPlugin.m"/>
     </platform>
 
 </plugin>
