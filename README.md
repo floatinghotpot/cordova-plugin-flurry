@@ -13,18 +13,25 @@ Highlights:
 
 Compatible with:
 
-* Cordova CLI, v3.5+
-* Intel XDK and Crosswalk, r1095+
-* IBM Worklight, v6.2+
+* [x] Cordova CLI, v3.5+
+* [x] Intel XDK and Crosswalk, r1095+
+* [x] IBM Worklight, v6.2+
+* [x] Google Mobile Chrome App
+* [x] Adobe PhoneGap Build, since 2014/12/9
 
 ## How to use? ##
 
-If use with Cordova CLI:
+* If use with [Cordova CLI](http://cordova.apache.org/):
 ```
 cordova plugin add com.rjfun.cordova.flurryads
 ```
 
-If use with Intel XDK:
+* If use with [PhoneGap Buid](http://build.phonegap.com/), just configure in config.xml:
+```javascript
+<gap:plugin name="com.rjfun.cordova.flurryads" source="plugins.cordova.io"/>
+```
+
+* If use with [Intel XDK](https://software.intel.com/en-us/html5/tools):
 Project -> CORDOVA 3.X HYBRID MOBILE APP SETTINGS -> PLUGINS AND PERMISSIONS -> Third-Party Plugins ->
 Add a Third-Party Plugin -> Get Plugin from the Web, input:
 ```
@@ -88,12 +95,14 @@ Methods:
 ```javascript
 // set default value for other methods
 setOptions(options, success, fail);
+
 // for banner
 createBanner(adId/options, success, fail);
 removeBanner();
 showBanner(position);
 showBannerAtXY(x, y);
 hideBanner();
+
 // for interstitial
 prepareInterstitial(adId/options, success, fail);
 showInterstitial();
