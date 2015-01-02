@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	id="com.rjfun.cordova.flurryads"
-	version="2.1.0">
+	version="2.1.1">
       
     <name>Flurry Ad</name>
 	<description>Add Flurry Ads to cordova app, earn more revenue with Flurry for publishers</description>
@@ -22,7 +22,6 @@
     </js-module>
 
 	<dependency id="com.rjfun.cordova.extension"/>
-	<dependency id="com.flurry.sdk"/>
 	
     <!-- android -->
     <platform name="android">
