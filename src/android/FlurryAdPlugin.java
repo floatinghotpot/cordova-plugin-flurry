@@ -4,18 +4,20 @@ import org.json.JSONObject;
 
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 
-import com.flurry.android.FlurryAdType;
-import com.flurry.android.FlurryAds;
-import com.flurry.android.FlurryAdSize;
 import com.flurry.android.FlurryAgent;
-import com.flurry.android.FlurryAdListener;
+import com.flurry.android.FlurryAds;
+
+import com.flurry.android.ads.FlurryAdBanner;
+import com.flurry.android.ads.FlurryAdBannerListener;
+import com.flurry.android.ads.FlurryAdErrorType;
+import com.flurry.android.ads.FlurryAdInterstitial;
+import com.flurry.android.ads.FlurryAdInterstitialListener;
 import com.rjfun.cordova.ad.GenericAdPlugin;
 
-public class FlurryAdPlugin extends GenericAdPlugin implements FlurryAdListener {
+public class FlurryAdPlugin extends GenericAdPlugin {
     private static final String LOGTAG = "FlurryAdPlugin";
 
     private static final String AD_TOP_BANNER = "TOP_BANNER";
@@ -25,7 +27,6 @@ public class FlurryAdPlugin extends GenericAdPlugin implements FlurryAdListener 
     private static final String TEST_APIKEY = "G56KN4J49YT66CFRD5K6";
 
     private boolean inited = false;
-    private FlurryAdSize adSize = FlurryAdSize.BANNER_BOTTOM;
     private String adSpace = AD_BOTTOM_BANNER;
 
     @Override
@@ -37,8 +38,8 @@ public class FlurryAdPlugin extends GenericAdPlugin implements FlurryAdListener 
     
     private void validateSession(String adId) {
     	if(! inited) {
-    		FlurryAds.setAdListener( this );
-    		FlurryAgent.onStartSession(getActivity(), adId);
+    		FlurryAgent.init(getActivity(), adId);
+    		FlurryAgent.onStartSession(getActivity());
     		inited = true;
     	}
     }
@@ -64,10 +65,8 @@ public class FlurryAdPlugin extends GenericAdPlugin implements FlurryAdListener 
 		}
 		
 		if(adPosition <= TOP_RIGHT) {
-			adSize = FlurryAdSize.BANNER_TOP;
 			adSpace = AD_TOP_BANNER;
 		} else {
-			adSize = FlurryAdSize.BANNER_BOTTOM;
 			adSpace = AD_BOTTOM_BANNER;
 		}
 	}
@@ -86,6 +85,73 @@ public class FlurryAdPlugin extends GenericAdPlugin implements FlurryAdListener 
 	protected String __getTestInterstitialId() {
 		return TEST_APIKEY;
 	}
+	
+	private FlurryAdBanner mFlurryAdBanner = null;
+	private FlurryAdInterstitial mFlurryAdInterstitial = null;
+	
+	   /** Gets a string error reason from an error code. */
+	   public String getErrorReason(FlurryAdErrorType t) {
+	     String errorReason = "unknown";
+	     switch(t) {
+	     case FETCH:
+	    	 errorReason = "error fetch ad";
+	         break;
+	     case RENDER:
+	    	 errorReason = "error render ad";
+	         break;
+	     case CLICK:
+	    	 errorReason = "error click ad";
+	         break;
+	     }
+	     return errorReason;
+	   }
+
+	FlurryAdBannerListener bannerAdListener = new FlurryAdBannerListener() {
+
+		@Override
+		public void onAppExit(FlurryAdBanner arg0) {
+	    	fireAdEvent(EVENT_AD_LEAVEAPP, ADTYPE_BANNER);
+		}
+
+		@Override
+		public void onClicked(FlurryAdBanner arg0) {
+	    	//fireAdEvent(EVENT_AD_LEAVEAPP, ADTYPE_BANNER);
+		}
+
+		@Override
+		public void onCloseFullscreen(FlurryAdBanner arg0) {
+        	fireAdEvent(EVENT_AD_DISMISS, ADTYPE_BANNER);
+		}
+
+		@Override
+		public void onError(FlurryAdBanner arg0, FlurryAdErrorType adErrorType, int errorCode) {
+        	fireAdErrorEvent(EVENT_AD_FAILLOAD, errorCode, getErrorReason(adErrorType), ADTYPE_BANNER);
+		}
+
+		@Override
+		public void onFetched(FlurryAdBanner arg0) {
+            if((! bannerVisible) && autoShowBanner) {
+            	showBanner(adPosition, posX, posY);
+            }
+        	fireAdEvent(EVENT_AD_LOADED, ADTYPE_BANNER);
+		}
+
+		@Override
+		public void onRendered(FlurryAdBanner arg0) {
+        	fireAdEvent(EVENT_AD_PRESENT, ADTYPE_BANNER);
+		}
+
+		@Override
+		public void onShowFullscreen(FlurryAdBanner arg0) {
+        	fireAdEvent(EVENT_AD_PRESENT, ADTYPE_BANNER);
+		}
+
+		@Override
+		public void onVideoCompleted(FlurryAdBanner arg0) {
+        	fireAdEvent(EVENT_AD_DISMISS, ADTYPE_BANNER);
+		}
+		
+	};
 
 	@Override
 	protected View __createAdView(String adId) {
@@ -97,9 +163,12 @@ public class FlurryAdPlugin extends GenericAdPlugin implements FlurryAdListener 
     	FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	ad.setLayoutParams(params);
     	
+    	mFlurryAdBanner = new FlurryAdBanner(getActivity(), ad, adSpace);
+    	mFlurryAdBanner.setListener(bannerAdListener);
+    	
 		return ad;
 	}
-
+	
 	@Override
 	protected int __getAdViewWidth(View view) {
 		return view.getWidth();
@@ -112,8 +181,7 @@ public class FlurryAdPlugin extends GenericAdPlugin implements FlurryAdListener 
 
 	@Override
 	protected void __loadAdView(View view) {
-		FrameLayout ad = (FrameLayout) view;
-    	FlurryAds.fetchAd(getActivity(), adSpace, ad, adSize);
+		mFlurryAdBanner.fetchAndDisplayAd();
 	}
 
 	@Override
@@ -126,105 +194,86 @@ public class FlurryAdPlugin extends GenericAdPlugin implements FlurryAdListener 
 
 	@Override
 	protected void __destroyAdView(View view) {
-		FrameLayout ad = (FrameLayout) view;
-		FlurryAds.removeAd(getActivity(), adSpace, ad);
+		mFlurryAdBanner.destroy();
 	}
 
+	FlurryAdInterstitialListener interstitialAdListener = new FlurryAdInterstitialListener() {
+
+		@Override
+		public void onAppExit(FlurryAdInterstitial arg0) {
+	    	fireAdEvent(EVENT_AD_LEAVEAPP, ADTYPE_INTERSTITIAL);
+		}
+
+		@Override
+		public void onClicked(FlurryAdInterstitial arg0) {
+	    	//fireAdEvent(EVENT_AD_LEAVEAPP, ADTYPE_INTERSTITIAL);
+		}
+
+		@Override
+		public void onClose(FlurryAdInterstitial arg0) {
+        	fireAdEvent(EVENT_AD_DISMISS, ADTYPE_INTERSTITIAL);
+
+        	removeInterstitial();
+		}
+
+		@Override
+		public void onDisplay(FlurryAdInterstitial arg0) {
+        	fireAdEvent(EVENT_AD_PRESENT, ADTYPE_INTERSTITIAL);
+		}
+
+		@Override
+		public void onError(FlurryAdInterstitial arg0, FlurryAdErrorType adErrorType, int errorCode) {
+        	fireAdErrorEvent(EVENT_AD_FAILLOAD, errorCode, getErrorReason(adErrorType), ADTYPE_INTERSTITIAL);
+		}
+
+		@Override
+		public void onFetched(FlurryAdInterstitial arg0) {
+            if(autoShowInterstitial) {
+            	showInterstitial();
+            }
+        	fireAdEvent(EVENT_AD_LOADED, ADTYPE_INTERSTITIAL);
+		}
+
+		@Override
+		public void onRendered(FlurryAdInterstitial arg0) {
+        	fireAdEvent(EVENT_AD_PRESENT, ADTYPE_INTERSTITIAL);
+		}
+
+		@Override
+		public void onVideoCompleted(FlurryAdInterstitial arg0) {
+	    	fireAdEvent(EVENT_AD_DISMISS, ADTYPE_INTERSTITIAL);
+		}
+		
+	};
+	
 	@Override
 	protected Object __createInterstitial(String adId) {
 		if(isTesting) adId = TEST_APIKEY;
 		
 		validateSession(adId);
-		FrameLayout ad = new FrameLayout(getActivity());
-    	FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-    			LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    	ad.setLayoutParams(params);
-		return ad;
+		
+		mFlurryAdInterstitial = new FlurryAdInterstitial(getActivity(), AD_INTERSTITIAL);
+		mFlurryAdInterstitial.setListener( interstitialAdListener );
+
+		return mFlurryAdInterstitial;
 	}
 
 	@Override
 	protected void __loadInterstitial(Object interstitial) {
-		FrameLayout ad = (FrameLayout) interstitial;
-		FlurryAds.fetchAd(getActivity(), AD_INTERSTITIAL, ad, FlurryAdSize.FULLSCREEN);	
+		FlurryAdInterstitial ad = (FlurryAdInterstitial) interstitial;
+		ad.fetchAd();
 	}
 
 	@Override
 	protected void __showInterstitial(Object interstitial) {
-		FrameLayout ad = (FrameLayout) interstitial;
-    	FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		getActivity().addContentView(ad, params);
+		FlurryAdInterstitial ad = (FlurryAdInterstitial) interstitial;
+		ad.displayAd();
 	}
 
 	@Override
 	protected void __destroyInterstitial(Object interstitial) {
-		FrameLayout ad = (FrameLayout) interstitial;
-		FlurryAds.removeAd(getActivity(), AD_INTERSTITIAL, ad);
-		ViewGroup parentView = (ViewGroup) ad.getParent();
-		if(parentView != null) {
-			parentView.removeView(ad);
-		}
-	}
-
-    /**
-     * document.addEventListener('onAdLoaded', function(data));
-     * document.addEventListener('onAdFailLoad', function(data));
-     * document.addEventListener('onAdPresent', function(data));
-     * document.addEventListener('onAdDismiss', function(data));
-     * document.addEventListener('onAdLeaveApp', function(data));
-     */
-	@Override
-	public void onAdClicked(String space) {
-    	fireAdEvent(EVENT_AD_LEAVEAPP, AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
-	}
-
-	@Override
-	public void onAdClosed(String space) {
-    	fireAdEvent(EVENT_AD_DISMISS, AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
-	}
-
-	@Override
-	public void onAdOpened(String space) {
-    	fireAdEvent(EVENT_AD_PRESENT, AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
-	}
-
-	@Override
-	public void onApplicationExit(String space) {
-    	fireAdEvent(EVENT_AD_DISMISS, AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
-	}
-
-	@Override
-	public void onRenderFailed(String space) {
-    	fireAdEvent(EVENT_AD_FAILLOAD, AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
-	}
-
-	@Override
-	public void onRendered(String space) {
-    	fireAdEvent(EVENT_AD_PRESENT, AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
-	}
-
-	@Override
-	public void onVideoCompleted(String space) {
-    	fireAdEvent(EVENT_AD_DISMISS, AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
-	}
-
-	@Override
-	public boolean shouldDisplayAd(String space, FlurryAdType arg1) {
-		return true;
-	}
-
-	@Override
-	public void spaceDidFailToReceiveAd(String space) {
-    	fireAdErrorEvent(EVENT_AD_FAILLOAD, -1, "Failed to receive Ad", AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
-	}
-
-	@Override
-	public void spaceDidReceiveAd(String space) {
-		if(AD_INTERSTITIAL.equals(space)) {
-			FlurryAds.displayAd(getActivity(), space, (ViewGroup) this.interstitialAd);
-		} else {
-			FlurryAds.displayAd(getActivity(), space, (ViewGroup) this.adView);
-		}
-    	fireAdEvent(EVENT_AD_LOADED, AD_INTERSTITIAL.equals(space) ? ADTYPE_INTERSTITIAL : ADTYPE_BANNER);
+		FlurryAdInterstitial ad = (FlurryAdInterstitial) interstitial;
+		ad.destroy();
 	}
 
 }

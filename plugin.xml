@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	id="com.rjfun.cordova.flurryads"
-	version="2.1.1">
+	version="5.3.0">
       
     <name>Flurry Ad</name>
 	<description>Add Flurry Ads to cordova app, earn more revenue with Flurry for publishers</description>
@@ -45,10 +45,11 @@
 			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 			<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     		<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
           </config-file>
           
-        <source-file src="src/android/FlurryAds-4.2.0.jar" target-dir="libs" />
-        <source-file src="src/android/FlurryAnalytics-4.2.0.jar" target-dir="libs" />
+        <source-file src="src/android/FlurryAds-5.3.0.jar" target-dir="libs" />
+        <source-file src="src/android/FlurryAnalytics-5.3.0.jar" target-dir="libs" />
      </platform>
      
      <!-- ios -->
