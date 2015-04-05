@@ -107,8 +107,16 @@ flurryExport.showInterstitial = function(successCallback, failureCallback) {
 	cordova.exec( successCallback, failureCallback, 'FlurryAds', 'showInterstitial', [] );
 };
 
-flurryExport.isInterstitialReady = function(successCallback, failureCallback) {
-	cordova.exec( successCallback, failureCallback, 'FlurryAds', 'isInterstitialReady', [] );
+flurryExport.createNativeAd = function(adId, successCallback, failureCallback) {
+	cordova.exec( successCallback, failureCallback, 'FlurryAds', 'createNativeAd', [adId] );
+};
+
+flurryExport.removeNativeAd = function(adId, successCallback, failureCallback) {
+	cordova.exec( successCallback, failureCallback, 'FlurryAds', 'removeNativeAd', [adId] );
+};
+
+flurryExport.setNativeAdClickArea = function(adId, x, y, w, h, successCallback, failureCallback) {
+	cordova.exec( successCallback, failureCallback, 'FlurryAds', 'setNativeAdClickArea', [adId,x,y,w,h] );
 };
 
 module.exports = flurryExport;

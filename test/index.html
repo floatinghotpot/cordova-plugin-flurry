@@ -71,6 +71,21 @@ button {
             FlurryAds.setOptions( defaultOptions );
             registerAdEvents();
         }
+		var nativeId = null;
+		function updateClickArea(){
+			if (nativeId != null) {
+				// change the click area
+				var offset = $("#nativead").offset();
+				var y = offset.top - $(window).scrollTop();
+				var x = offset.left - $(window).scrollLeft();
+				var w = $("#nativead").width();
+				var h = $("#nativead").height();
+				AdMob.setNativeAdClickArea(nativeId, x, y, w, h);
+			}
+		}
+		$(window).scroll(function(){
+			updateClickArea();
+		});
         // optional, in case respond to events or handle error
         function registerAdEvents() {
             // new events, with variable to differentiate: adNetwork, adType, adEvent
@@ -81,7 +96,40 @@ button {
             			', adType:' + data.adType + 
             			', adEvent:' + data.adEvent); // adType: 'banner' or 'interstitial'
             });
-            document.addEventListener('onAdLoaded', function(data){});
+            document.addEventListener('onAdLoaded', function(data){
+				if (data.adType == "native") {
+					var adRes = data.adRes;
+					//alert( JSON.stringify(adRes) );
+
+					// show ad
+					nativeId = data.adId;
+					var nativeAdContent = adRes.headline
+							+ '<br/>summary:'
+							+ adRes.summary
+							+ "<br/>source: "
+							+ adRes.source
+							+ "<br/>";
+					if(adRes.secBrandingLogo) {
+						nativeAdContent = "<img src='" + adRes.secBrandingLogo.url + "' width='" + adRes.secBrandingLogo.width + "' height='" + adRes.secBrandingLogo.height + "'/><br/>";
+					}
+					if(adRes.secHqBrandingLogo) {
+						nativeAdContent = "<img src='" + adRes.secHqBrandingLogo.url + "' width='" + adRes.secHqBrandingLogo.width + "' height='" + adRes.secHqBrandingLogo.height + "'/><br/>";
+					}
+/*					if(adRes.secOrigImg) {
+						nativeAdContent = "<img src='" + adRes.secOrigImg.url + "' width='" + adRes.secOrigImg.width + "' height='" + adRes.secOrigImg.height + "'/><br/>";
+					}
+					if(adRes.secHqImage) {
+						nativeAdContent = "<img src='" + adRes.secHqImage.url + "' width='" + adRes.secHqImage.width + "' height='" + adRes.secHqImage.height + "'/><br/>";
+					}
+*/
+					if(adRes.secImage) {
+						nativeAdContent = "<img src='" + adRes.secImage.url + "' width='" + adRes.secImage.width + "' height='" + adRes.secImage.height + "'/><br/>";
+					}
+					$('#nativead').html(nativeAdContent);
+					
+					updateClickArea();
+				}
+            });
             document.addEventListener('onAdPresent', function(data){});
             document.addEventListener('onAdLeaveApp', function(data){});
             document.addEventListener('onAdDismiss', function(data){});
@@ -126,6 +174,13 @@ button {
             var s = document.getElementById('sizeinfo');
             s.innerHTML = "web view: " + window.innerWidth + " x " + window.innerHeight;
         }
+		function createNativeAd() {
+			FlurryAds.createNativeAd(adid);
+		}
+		function removeNativeAd() {
+			$('#nativead').html("<br/>");
+			FlurryAds.removeNativeAd(nativeId);
+		}
         </script>
 	<div id="fullpage">
 		<p>Demo for FlurryAds Plugin</p>
@@ -171,6 +226,12 @@ button {
 		<button onclick="prepareInterstitial();">Prepare</button>
 		<button onclick="FlurryAds.showInterstitial();">Show</button>
 		<div id='sizeinfo'></div>
+		<hr />
+
+		<p>Native Ad</p>
+		<div id='nativead' style="border:1pt solid red;width:300;"><br/></div>
+		<button onclick="createNativeAd();">Create</button>
+		<button onclick="removeNativeAd();">Remove</button>
 	</div>
 </body>
 </html>
