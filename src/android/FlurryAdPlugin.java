@@ -89,6 +89,7 @@ public class FlurryAdPlugin extends GenericAdPlugin {
 		
 		// for test only
 		if(this.isTesting) {
+			Log.d(LOGTAG,"isTesting");
 			FlurryAds.enableTestAds( true );
 			if(this.logVerbose) {
 			    FlurryAgent.setLogEnabled(true);
@@ -494,6 +495,7 @@ public class FlurryAdPlugin extends GenericAdPlugin {
 						adRes.put("secImage", img);
 					}
 
+					json.put("adRes", adRes);
 					jsonData = json.toString();
 				} catch(Exception e) {
 				}

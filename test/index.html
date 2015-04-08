@@ -7,6 +7,7 @@
 	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
 <title>Hello World</title>
 <script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="jquery-1.9.js"></script>
 <style type="text/css">
 body {
 	width: 100%;
@@ -80,7 +81,7 @@ button {
 				var x = offset.left - $(window).scrollLeft();
 				var w = $("#nativead").width();
 				var h = $("#nativead").height();
-				AdMob.setNativeAdClickArea(nativeId, x, y, w, h);
+				FlurryAds.setNativeAdClickArea(nativeId, x, y, w, h);
 			}
 		}
 		$(window).scroll(function(){
@@ -110,20 +111,20 @@ button {
 							+ adRes.source
 							+ "<br/>";
 					if(adRes.secBrandingLogo) {
-						nativeAdContent = "<img src='" + adRes.secBrandingLogo.url + "' width='" + adRes.secBrandingLogo.width + "' height='" + adRes.secBrandingLogo.height + "'/><br/>";
+						nativeAdContent += "<img src='" + adRes.secBrandingLogo.url + "' width='" + adRes.secBrandingLogo.width + "' height='" + adRes.secBrandingLogo.height + "'/><br/>";
 					}
 					if(adRes.secHqBrandingLogo) {
-						nativeAdContent = "<img src='" + adRes.secHqBrandingLogo.url + "' width='" + adRes.secHqBrandingLogo.width + "' height='" + adRes.secHqBrandingLogo.height + "'/><br/>";
+						nativeAdContent += "<img src='" + adRes.secHqBrandingLogo.url + "' width='" + adRes.secHqBrandingLogo.width + "' height='" + adRes.secHqBrandingLogo.height + "'/><br/>";
 					}
 /*					if(adRes.secOrigImg) {
-						nativeAdContent = "<img src='" + adRes.secOrigImg.url + "' width='" + adRes.secOrigImg.width + "' height='" + adRes.secOrigImg.height + "'/><br/>";
+						nativeAdContent += "<img src='" + adRes.secOrigImg.url + "' width='" + adRes.secOrigImg.width + "' height='" + adRes.secOrigImg.height + "'/><br/>";
 					}
 					if(adRes.secHqImage) {
-						nativeAdContent = "<img src='" + adRes.secHqImage.url + "' width='" + adRes.secHqImage.width + "' height='" + adRes.secHqImage.height + "'/><br/>";
+						nativeAdContent += "<img src='" + adRes.secHqImage.url + "' width='" + adRes.secHqImage.width + "' height='" + adRes.secHqImage.height + "'/><br/>";
 					}
 */
 					if(adRes.secImage) {
-						nativeAdContent = "<img src='" + adRes.secImage.url + "' width='" + adRes.secImage.width + "' height='" + adRes.secImage.height + "'/><br/>";
+						nativeAdContent += "<img src='" + adRes.secImage.url + "' width='" + adRes.secImage.width + "' height='" + adRes.secImage.height + "'/><br/>";
 					}
 					$('#nativead').html(nativeAdContent);
 					
