@@ -387,8 +387,17 @@ public class FlurryAdPlugin extends GenericAdPlugin {
 		
 	};
 
+	// nativeAdId = "apikey/index"
     public void createNativeAd(final String adId) {
-	  	Log.d(LOGTAG, "createNativeAd: " + adId);
+    	String[] fields = adId.split("/");
+    	String apikey = (fields.length >= 1) ? fields[0] : TEST_APIKEY;
+    	String index = (fields.length >= 2) ? fields[1] : "0";
+    	
+		if(isTesting) apikey = TEST_APIKEY;
+		
+		validateSession(apikey);
+		
+	  	Log.d(LOGTAG, "createNativeAd: " + apikey + "/" + index);
 	    final Activity activity = getActivity();
 	    activity.runOnUiThread(new Runnable(){
             @Override
