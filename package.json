@@ -1,24 +1,32 @@
 {
-    "version": "5.3.0",
-    "name": "com.rjfun.cordova.flurryads",
-    "cordova_name": "Flurry Ad",
-    "description": "Add Flurry Ads to cordova app, earn more revenue with Flurry for publishers",
-    "license": "MIT",
-    "repo": "https://github.com/floatinghotpot/cordova-plugin-flurry.git",
-    "issue": "https://github.com/floatinghotpot/cordova-plugin-flurry/issues",
-    "keywords": [
-        "ad",
-        "flurry",
-        "rjfun"
-    ],
+  "name": "cordova-plugin-flurry",
+  "version": "5.3.1",
+  "description": "Cordova Plugin for Yahoo Flurry Ads to monetize hybrid apps.",
+  "cordova": {
+    "id": "cordova-plugin-flurry",
     "platforms": [
-        "android",
-        "ios"
-    ],
-    "engines": [
-        {
-            "name": "cordova",
-            "version": ">=3.0"
-        }
+      "android",
+      "ios"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/floatinghotpot/cordova-plugin-flurry.git"
+  },
+  "bugs": {
+    "url": "https://github.com/floatinghotpot/cordova-plugin-flurry/issues"
+  },
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "ad",
+    "yahoo",
+    "flurry",
+    "rjfun"
+  ],
+  "author": {
+    "name": "Raymond Xie",
+    "email": "rjfun.mobile@gmail.com"
+  },
+  "license": "MIT"
 }

@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	id="com.rjfun.cordova.flurryads"
+	id="cordova-plugin-flurry"
 	version="5.3.1">
       
     <name>Flurry Ad</name>
@@ -21,7 +21,7 @@
         <clobbers target="window.FlurryAds" />
     </js-module>
 
-	<dependency id="com.rjfun.cordova.extension"/>
+	<dependency id="cordova-plugin-extension"/>
 	
     <!-- android -->
     <platform name="android">
@@ -32,7 +32,7 @@
         </config-file>
         <source-file src="src/android/FlurryAdPlugin.java" target-dir="src/com/rjfun/cordova/flurry" />
         
-        <dependency id="com.google.playservices" url="https://github.com/floatinghotpot/google-play-services" commit="r19" />
+        <dependency id="cordova-plugin-googleplayservices"/>
 	    <!-- dependency id="android.support.v4"/ -->
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">

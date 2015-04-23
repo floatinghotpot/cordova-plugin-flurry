@@ -18,12 +18,13 @@ Compatible with:
 * [x] IBM Worklight, v6.2+
 * [x] Google Mobile Chrome App
 * [x] Adobe PhoneGap Build, since 2014/12/9
+* [x] Ionic
 
 ## How to use? ##
 
-* If use with [Cordova CLI](http://cordova.apache.org/):
+* If use with [Cordova CLI](http://cordova.apache.org/) to load from npm registry:
 ```
-cordova plugin add com.rjfun.cordova.flurryads
+cordova plugin add cordova-plugin-flurry
 ```
 
 * If use with [PhoneGap Buid](http://build.phonegap.com/), just configure in config.xml:
