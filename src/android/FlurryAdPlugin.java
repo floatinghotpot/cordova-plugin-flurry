@@ -16,7 +16,9 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
@@ -58,6 +60,7 @@ public class FlurryAdPlugin extends GenericAdPlugin {
 		public int x, y, w, h;
 		public FlurryAdNative ad;
 		public View view;
+		public View tracking;
 	};
 	
 	private HashMap<String, FlexNativeAd> nativeAds = new HashMap<String, FlexNativeAd>();
@@ -419,18 +422,51 @@ public class FlurryAdPlugin extends GenericAdPlugin {
             	unit.adId = adId;
             	unit.x = unit.y = 0;
             	unit.w = unit.h = 80;
-            	
+
             	unit.view = new View(getActivity());
+            	unit.tracking = new View(getActivity());
             	layout.addView(unit.view, new RelativeLayout.LayoutParams(unit.w, unit.h));
+            	layout.addView(unit.tracking, new RelativeLayout.LayoutParams(unit.w, unit.h));
             	if(isTesting) {
                 	unit.view.setBackgroundColor(0x3000FF00);
             	}
-            	
+
+            	// pass scroll event in tracking view to webview to improve UX
+            	final View webV = getView();
+            	final View trackingV = unit.tracking;
+            	OnTouchListener t = new OnTouchListener(){
+            		public float mTapX = 0, mTapY = 0;
+
+					@Override
+					public boolean onTouch(View v, MotionEvent evt) {
+						switch(evt.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+							mTapX = evt.getX();
+							mTapY = evt.getY();
+							break;
+
+						case MotionEvent.ACTION_UP:
+							if(Math.abs(evt.getX() - mTapX) + Math.abs(evt.getY() - mTapY) < 10) {
+								mTapX = 0;
+								mTapY = 0;
+								evt.setAction(MotionEvent.ACTION_DOWN);
+								trackingV.dispatchTouchEvent(evt);
+								evt.setAction(MotionEvent.ACTION_UP);
+								return trackingV.dispatchTouchEvent(evt);
+							}
+							break;
+						}
+
+						return webV.dispatchTouchEvent(evt);
+					}
+            	};
+            	unit.view.setOnTouchListener(t);
+
             	unit.ad = new FlurryAdNative(getActivity(), AD_NATIVE);
             	unit.ad.setListener( mFlurryAdNativeListener );
-            	
+
             	nativeAds.put(adId, unit);
-            	
+
             	unit.ad.fetchAd();
             }
 	    });
@@ -508,7 +544,7 @@ public class FlurryAdPlugin extends GenericAdPlugin {
 					jsonData = json.toString();
 				} catch(Exception e) {
 				}
-            	unit.ad.setTrackingView(unit.view);
+            	unit.ad.setTrackingView(unit.tracking);
 				fireEvent(__getProductShortName(), EVENT_AD_LOADED, jsonData);
         		break;
         	}
