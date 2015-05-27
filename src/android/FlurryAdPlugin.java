@@ -421,7 +421,7 @@ public class FlurryAdPlugin extends GenericAdPlugin {
             	FlexNativeAd unit = new FlexNativeAd();
             	unit.adId = adId;
             	unit.x = unit.y = 0;
-            	unit.w = unit.h = 80;
+                unit.w = unit.h = 1;
 
             	unit.view = new View(getActivity());
             	unit.tracking = new View(getActivity());
