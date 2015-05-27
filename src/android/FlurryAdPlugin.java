@@ -434,6 +434,7 @@ public class FlurryAdPlugin extends GenericAdPlugin {
             	// pass scroll event in tracking view to webview to improve UX
             	final View webV = getView();
             	final View trackingV = unit.tracking;
+                final View touchV = unit.view;
             	OnTouchListener t = new OnTouchListener(){
             		public float mTapX = 0, mTapY = 0;
 
@@ -446,9 +447,10 @@ public class FlurryAdPlugin extends GenericAdPlugin {
 							break;
 
 						case MotionEvent.ACTION_UP:
-							if(Math.abs(evt.getX() - mTapX) + Math.abs(evt.getY() - mTapY) < 10) {
-								mTapX = 0;
-								mTapY = 0;
+							boolean clicked = (Math.abs(evt.getX() - mTapX) + Math.abs(evt.getY() - mTapY) < 10);
+							mTapX = 0;
+							mTapY = 0;
+							if(clicked) {
 								evt.setAction(MotionEvent.ACTION_DOWN);
 								trackingV.dispatchTouchEvent(evt);
 								evt.setAction(MotionEvent.ACTION_UP);
@@ -456,6 +458,12 @@ public class FlurryAdPlugin extends GenericAdPlugin {
 							}
 							break;
 						}
+
+                        // adjust touch event location to web view
+                        int offsetWebV[] = {0,0}, offsetTouchView[] = {0,0};
+                        touchV.getLocationOnScreen( offsetTouchView );
+                        webV.getLocationOnScreen( offsetWebV );
+                        evt.offsetLocation(offsetTouchView[0] - offsetWebV[0], offsetTouchView[1] - offsetWebV[1]);
 
 						return webV.dispatchTouchEvent(evt);
 					}
