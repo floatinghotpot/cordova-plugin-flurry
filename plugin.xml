@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	id="cordova-plugin-flurry"
-	version="5.3.2">
+	version="5.3.3">
       
     <name>Flurry Ad</name>
 	<description>Add Flurry Ads to cordova app, earn more revenue with Flurry for publishers</description>
@@ -31,9 +31,6 @@
             </feature>
         </config-file>
         <source-file src="src/android/FlurryAdPlugin.java" target-dir="src/com/rjfun/cordova/flurry" />
-        
-        <dependency id="cordova-plugin-googleplayservices"/>
-	    <!-- dependency id="android.support.v4"/ -->
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
 			<activity android:name="com.flurry.android.FlurryFullscreenTakeoverActivity" 
@@ -50,6 +47,9 @@
           
         <source-file src="src/android/FlurryAds-5.3.0.jar" target-dir="libs" />
         <source-file src="src/android/FlurryAnalytics-5.3.0.jar" target-dir="libs" />
+
+        <framework src="com.google.android.gms:play-services-ads:+" />
+        <framework src="com.android.support:support-v4:+" />
      </platform>
      
      <!-- ios -->
