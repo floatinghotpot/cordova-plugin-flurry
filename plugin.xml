@@ -4,7 +4,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	id="com.rjfun.cordova.flurryads"
 	version="5.3.4">
-      
+
     <name>Flurry Ad</name>
 	<description>Add Flurry Ads to cordova app, earn more revenue with Flurry for publishers</description>
 	<author>Liming Xie</author>
@@ -22,7 +22,7 @@
     </js-module>
 
 	<dependency id="com.rjfun.cordova.extension"/>
-	
+
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
@@ -31,12 +31,12 @@
             </feature>
         </config-file>
         <source-file src="src/android/FlurryAdPlugin.java" target-dir="src/com/rjfun/cordova/flurry" />
-        
+
         <dependency id="com.google.playservices" url="https://github.com/floatinghotpot/google-play-services" commit="r19" />
 	    <!-- dependency id="android.support.v4"/ -->
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-			<activity android:name="com.flurry.android.FlurryFullscreenTakeoverActivity" 
+			<activity android:name="com.flurry.android.FlurryFullscreenTakeoverActivity"
 				android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
 			</activity>
 			</config-file>
@@ -47,13 +47,13 @@
     		<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
           </config-file>
-          
-        <source-file src="src/android/FlurryAds-5.3.0.jar" target-dir="libs" />
-        <source-file src="src/android/FlurryAnalytics-5.3.0.jar" target-dir="libs" />
+
+        <source-file src="src/android/FlurryAds-5.5.0.jar" target-dir="libs" />
+        <source-file src="src/android/FlurryAnalytics-5.5.0.jar" target-dir="libs" />
      </platform>
-     
+
      <!-- ios -->
-     <platform name="ios">    
+     <platform name="ios">
          <config-file target="config.xml" parent="/*">
              <feature name="FlurryAds">
                  <param name="ios-package" value="FlurryAdPlugin" />
@@ -61,13 +61,13 @@
          </config-file>
          <header-file src="src/ios/FlurryAdPlugin.h"/>
          <source-file src="src/ios/FlurryAdPlugin.m"/>
-         
+
          <header-file src="src/ios/Flurry.h" />
          <header-file src="src/ios/FlurryAds.h" />
          <header-file src="src/ios/FlurryAdDelegate.h" />
          <source-file src="src/ios/libFlurry_5.4.0.a" framework="true" />
          <source-file src="src/ios/libFlurryAds_5.4.0.a" framework="true" />
-         
+
          <framework src="AdSupport.framework" />
          <framework src="CoreGraphics.framework" />
          <framework src="Foundation.framework" />
